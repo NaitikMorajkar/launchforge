@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo · Developer Showcase</title>
+<style>
+  :root { --accent:#6366f1; --bg:#08090f; --card:#0f1120; --line:#1e2036; --txt:#e8e9f5; --mut:#9498b8; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--txt); }
+  header { padding:26px 20px 16px; max-width:1020px; margin:0 auto; }
+  h1 { font-size:26px; } .sub { color:var(--mut); margin-top:6px; font-size:14px; }
+  .filters { display:flex; gap:8px; flex-wrap:wrap; max-width:1020px; margin:16px auto; padding:0 20px; }
+  .filters button { background:var(--card); border:1px solid var(--line); color:var(--mut); padding:7px 14px; border-radius:999px; cursor:pointer; font-size:12.5px; transition:.2s; display:flex; align-items:center; gap:7px; }
+  .filters button.active { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:700; }
+  .ldot { width:9px; height:9px; border-radius:50%; }
+  main { max-width:1020px; margin:0 auto; padding:6px 20px 70px; display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .repo { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; transition:.22s; cursor:pointer; }
+  .repo:hover { transform:translateY(-4px); border-color:var(--accent); box-shadow:0 16px 40px rgba(0,0,0,.45); }
+  .rhead { display:flex; align-items:center; gap:9px; margin-bottom:8px; } .ico { font-size:18px; }
+  .rhead b { font-size:15px; } .lang { margin-left:auto; display:flex; align-items:center; gap:6px; font-size:12px; color:var(--mut); }
+  .desc { font-size:13px; color:var(--mut); line-height:1.55; min-height:40px; }
+  .stats { display:flex; gap:16px; margin-top:14px; font-size:12px; color:var(--mut); align-items:center; }
+  .stats b { color:var(--txt); } .star { color:#f59e0b; }
+  .activity { max-width:1020px; margin:30px auto 0; padding:0 20px 70px; }
+  .activity h3 { font-size:15px; color:var(--mut); margin-bottom:12px; font-weight:600; }
+  .grid9 { display:grid; grid-template-columns:repeat(26,1fr); gap:3px; max-width:760px; }
+  .cell { aspect-ratio:1; border-radius:2px; background:#14162a; }
+  .l1{background:#1e2b4d;} .l2{background:#2f4a8f;} .l3{background:#4069d1;} .l4{background:#5b86ff;}
+  .tip { display:flex; gap:20px; font-size:12px; color:var(--mut); margin-top:10px; align-items:center; } .less{background:#14162a;} .more{background:#5b86ff;}
+  @media(max-width:640px){ .grid9{grid-template-columns:repeat(13,1fr);} }
+</style>
+</head>
+<body>
+<header><h1>Developer Showcase</h1><div class="sub">Trending open-source projects — filter by language, explore, star.</div></header>
+<div class="filters" id="filters"></div>
+<main id="repos"></main>
+<div class="activity">
+  <h3>Contribution activity — last 26 weeks</h3>
+  <div class="grid9" id="grid9"></div>
+  <div class="tip"><span class="cell less" style="width:11px;height:11px;display:inline-block"></span> Less
+    <span class="cell more" style="width:11px;height:11px;display:inline-block"></span> More</div>
+</div>
+<script>
+  const REPOS=[
+    {n:'nebula-ui',d:'A React component library with 60+ accessible primitives and dark mode.',l:'TypeScript',c:'#3178c6',s:12400,f:820,ic:'🎨'},
+    {n:'swiftedge',d:'Ultra-fast edge runtime with cold starts under 5ms.',l:'Rust',c:'#dea584',s:9800,f:540,ic:'⚡'},
+    {n:'orbital',d:'Declarative infrastructure-as-code for multi-cloud deploys.',l:'Go',c:'#00add8',s:15200,f:1120,ic:'🛰️'},
+    {n:'lumen-db',d:'Embeddable analytical database with columnar storage.',l:'C++',c:'#f34b7d',s:7300,f:410,ic:'🗄️'},
+    {n:'pixelforge',d:'WebGPU path tracer that runs in any modern browser.',l:'WGSL',c:'#8b5cf6',s:5600,f:290,ic:'✨'},
+    {n:'swiftlet',d:'Tiny ML inference engine for mobile devices.',l:'Swift',c:'#f05138',s:4100,f:180,ic:'🧠'},
+    {n:'dataweave',d:'Reactive data-flow framework with zero re-renders.',l:'TypeScript',c:'#3178c6',s:8900,f:610,ic:'🧵'},
+    {n:'terrakit',d:'CLI + SDK for provisioning sandboxes in seconds.',l:'Python',c:'#3572A5',s:6700,f:350,ic:'🌍'}
+  ];
+  const LANGS=['All',...Array.from(new Set(REPOS.map(r=>r.l)))];
+  let filter='All';
+  function drawFilters(){
+    document.getElementById('filters').innerHTML=LANGS.map(l=>{
+      const c=REPOS.find(r=>r.l===l); const dot=l==='All'?'':`<span class="ldot" style="background:${c?c.c:'#888'}"></span>`;
+      return `<button data-l="${l}" class="${l===filter?'active':''}">${dot}${l}</button>`; }).join('');
+    document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{ filter=b.dataset.l; drawFilters(); drawRepos(); });
+  }
+  function drawRepos(){
+    document.getElementById('repos').innerHTML=REPOS.filter(r=>filter==='All'||r.l===filter).map(r=>`
+      <div class="repo" onclick="toast('⭐ Starred ${r.n} (demo)')">
+        <div class="rhead"><span class="ico">${r.ic}</span><b>${r.n}</b>
+          <span class="lang"><span class="ldot" style="background:${r.c}"></span>${r.l}</span></div>
+        <div class="desc">${r.d}</div>
+        <div class="stats"><span><span class="star">★</span> <b>${(r.s/1000).toFixed(1)}k</b></span>
+          <span>⑂ <b>${r.f}</b></span><span>Updated 2d ago</span></div>
+      </div>`).join('');
+  }
+  // Contribution heatmap
+  const levels=['','l1','l2','l3','l4']; const g=document.getElementById('grid9');
+  for(let i=0;i<26*7;i++){ const c=document.createElement('div'); c.className='cell '+(levels[Math.floor(Math.random()*Math.random()*5)]||''); g.appendChild(c); }
+  function toast(m){ let t=document.getElementById('t');
+    if(!t){ t=document.createElement('div'); t.id='t'; t.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#6366f1;color:#fff;padding:11px 18px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:50'; document.body.appendChild(t); }
+    t.textContent=m; t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+    clearTimeout(t._h); t._h=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},1800); }
+  drawFilters(); drawRepos();
+</script>
+</body>
+</html>

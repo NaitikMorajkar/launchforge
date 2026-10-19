@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo · Analytics Dashboard</title>
+<style>
+  :root { --accent:#10b981; --bg:#070c0a; --card:#0e1613; --line:#1c2b24; --txt:#e6f5ee; --mut:#8fae9f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--txt); display:flex; min-height:100vh; }
+  aside { width:216px; border-right:1px solid var(--line); background:#0a120e; padding:20px 14px; flex-shrink:0; }
+  .logo { font-weight:800; font-size:17px; margin:4px 8px 26px; } .logo b { color:var(--accent); }
+  .nav button { display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:transparent; border:0; color:var(--mut); padding:11px 12px; border-radius:11px; cursor:pointer; font-size:13.5px; margin-bottom:4px; transition:.18s; }
+  .nav button:hover { color:var(--txt); background:var(--card); } .nav button.active { color:#04140c; background:var(--accent); font-weight:800; }
+  .content { flex:1; padding:26px 30px; max-width:1100px; }
+  .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+  h1 { font-size:22px; } .range { display:flex; gap:6px; } .range button { background:var(--card); border:1px solid var(--line); color:var(--mut); padding:7px 12px; border-radius:9px; cursor:pointer; font-size:12px; }
+  .range button.active { background:var(--accent); color:#04140c; border-color:var(--accent); font-weight:700; }
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; }
+  .kpi .lab { font-size:12px; color:var(--mut); } .kpi .val { font-size:26px; font-weight:800; margin:6px 0; }
+  .kpi .delta { font-size:12px; font-weight:700; } .up { color:#10b981; } .down { color:#ef4444; }
+  .panels { display:grid; grid-template-columns:1.6fr 1fr; gap:14px; }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
+  .panel h3 { font-size:14px; margin-bottom:16px; color:var(--mut); font-weight:600; }
+  .bars { display:flex; align-items:flex-end; gap:10px; height:180px; }
+  .bar { flex:1; border-radius:8px 8px 0 0; background:linear-gradient(180deg,var(--accent),#065f46); position:relative; transition:.6s cubic-bezier(.16,1,.3,1); cursor:pointer; }
+  .bar:hover { filter:brightness(1.2); } .bar span { position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--mut); }
+  .bar b { position:absolute; bottom:-22px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--mut); font-weight:500; }
+  .donut { display:grid; place-items:center; } .legend { display:grid; gap:10px; width:100%; margin-top:14px; }
+  .legend div { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--mut); } .dot { width:10px; height:10px; border-radius:3px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; } th,td { text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); }
+  th { color:var(--mut); font-weight:600; font-size:12px; } .tag { font-size:11px; padding:3px 9px; border-radius:999px; font-weight:700; }
+  .ok { background:rgba(16,185,129,.15); color:#10b981; } .pend { background:rgba(245,158,11,.15); color:#f59e0b; }
+  .view { display:none; } .view.on { display:block; }
+  @media(max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr);} .panels{grid-template-columns:1fr;} aside{display:none;} }
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo">PULSE<b>·DB</b></div>
+  <div class="nav" id="nav">
+    <button data-v="overview" class="active">📊 Overview</button>
+    <button data-v="orders">🧾 Orders</button>
+    <button data-v="cust">👥 Customers</button>
+    <button data-v="set">⚙️ Settings</button>
+  </div>
+</aside>
+<div class="content">
+  <div class="top">
+    <h1 id="title">Overview</h1>
+    <div class="range" id="range">
+      <button data-r="7" class="active">7d</button><button data-r="30">30d</button><button data-r="90">90d</button>
+    </div>
+  </div>
+
+  <div class="view on" id="overview">
+    <div class="kpis">
+      <div class="kpi"><div class="lab">Revenue</div><div class="val" id="k1">$48.2k</div><div class="delta up">▲ 12.4%</div></div>
+      <div class="kpi"><div class="lab">Orders</div><div class="val" id="k2">1,284</div><div class="delta up">▲ 8.1%</div></div>
+      <div class="kpi"><div class="lab">Customers</div><div class="val" id="k3">3,910</div><div class="delta up">▲ 4.7%</div></div>
+      <div class="kpi"><div class="lab">Refunds</div><div class="val" id="k4">22</div><div class="delta down">▼ 1.2%</div></div>
+    </div>
+    <div class="panels">
+      <div class="panel"><h3>Weekly revenue</h3><div class="bars" id="bars"></div></div>
+      <div class="panel donut">
+        <h3 style="align-self:start">Traffic sources</h3>
+        <svg width="150" height="150" viewBox="0 0 42 42">
+          <circle cx="21" cy="21" r="15.9" fill="none" stroke="#1c2b24" stroke-width="6"></circle>
+          <circle cx="21" cy="21" r="15.9" fill="none" stroke="#10b981" stroke-width="6" stroke-dasharray="46 54" stroke-dashoffset="25"></circle>
+          <circle cx="21" cy="21" r="15.9" fill="none" stroke="#06b6d4" stroke-width="6" stroke-dasharray="30 70" stroke-dashoffset="79"></circle>
+          <circle cx="21" cy="21" r="15.9" fill="none" stroke="#8b5cf6" stroke-width="6" stroke-dasharray="24 76" stroke-dashoffset="49"></circle>
+        </svg>
+        <div class="legend">
+          <div><span class="dot" style="background:#10b981"></span>Organic 46%</div>
+          <div><span class="dot" style="background:#06b6d4"></span>Referral 30%</div>
+          <div><span class="dot" style="background:#8b5cf6"></span>Social 24%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="orders">
+    <div class="panel"><h3>Recent orders</h3>
+      <table><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody id="orders-body"></tbody></table>
+    </div>
+  </div>
+
+  <div class="view" id="cust">
+    <div class="panel"><h3>Top customers</h3>
+      <table><thead><tr><th>Name</th><th>Orders</th><th>LTV</th><th>Plan</th></tr></thead>
+      <tbody id="cust-body"></tbody></table>
+    </div>
+  </div>
+
+  <div class="view" id="set">
+    <div class="panel"><h3>Workspace settings</h3>
+      <p style="color:var(--mut);font-size:13px;line-height:1.7">Realtime refresh · <b style="color:#10b981">ON</b><br/>Data retention · 12 months<br/>Exports · CSV / JSON<br/><br/><em>This is a static demo — settings are illustrative only.</em></p>
+    </div>
+  </div>
+</div>
+<script>
+  const DATA={7:{r:[38,52,44,61,49,68,58],k:['$48.2k','1,284','3,910','22']},30:{r:[42,55,60,48,72,64,80],k:['$196k','5,210','9,880','74']},90:{r:[50,46,68,74,60,82,90],k:['$588k','16.4k','24.1k','190']}};
+  const DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let range=7;
+  function drawBars(){
+    const d=DATA[range].r, max=Math.max(...d), el=document.getElementById('bars'); el.innerHTML='';
+    d.forEach((v,i)=>{ const b=document.createElement('div'); b.className='bar'; b.style.height='0%';
+      b.innerHTML=`<span>$${v}k</span><b>${DAYS[i]}</b>`; el.appendChild(b);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>b.style.height=(v/max*100)+'%')); });
+  }
+  function setRange(r){ range=r; document.querySelectorAll('#range button').forEach(x=>x.classList.toggle('active',+x.dataset.r===r));
+    const k=DATA[r].k; ['k1','k2','k3','k4'].forEach((id,i)=>document.getElementById(id).textContent=k[i]); drawBars(); }
+  document.querySelectorAll('#range button').forEach(b=>b.onclick=()=>setRange(+b.dataset.r));
+
+  const ORDERS=[['#10241','Ava Chen','$240','ok','Paid'],['#10240','Liam Patel','$89','ok','Paid'],['#10239','Maya Rossi','$410','pend','Pending'],['#10238','Noah Kim','$120','ok','Paid'],['#10237','Zoe Adams','$65','pend','Pending']];
+  document.getElementById('orders-body').innerHTML=ORDERS.map(o=>`<tr><td>${o[0]}</td><td>${o[1]}</td><td>${o[2]}</td><td><span class="tag ${o[3]}">${o[4]}</span></td></tr>`).join('');
+  const CUST=[['Ava Chen',42,'$4,210','Pro'],['Liam Patel',28,'$2,890','Team'],['Maya Rossi',65,'$6,120','Pro'],['Noah Kim',12,'$980','Hobby'],['Zoe Adams',33,'$3,400','Team']];
+  document.getElementById('cust-body').innerHTML=CUST.map(c=>`<tr><td>${c[0]}</td><td>${c[1]}</td><td>${c[2]}</td><td>${c[3]}</td></tr>`).join('');
+
+  const TITLES={overview:'Overview',orders:'Orders',cust:'Customers',set:'Settings'};
+  document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('active',x===b));
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===b.dataset.v));
+    document.getElementById('title').textContent=TITLES[b.dataset.v]; });
+  setRange(7);
+</script>
+</body>
+</html>

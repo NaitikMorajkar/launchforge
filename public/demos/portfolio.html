@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo · Portfolio</title>
+<style>
+  :root { --accent:#8b5cf6; --bg:#0b0b12; --card:#14141f; --line:#24243a; --txt:#e7e7f2; --mut:#9a9ab0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif; background:radial-gradient(1200px 600px at 20% -10%,rgba(139,92,246,.25),transparent),var(--bg); color:var(--txt); min-height:100vh; }
+  header { position:sticky; top:0; backdrop-filter:blur(10px); background:rgba(11,11,18,.7); border-bottom:1px solid var(--line); z-index:5; }
+  .bar { max-width:960px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-weight:800; letter-spacing:.5px; } .logo b { color:var(--accent); }
+  nav { display:flex; gap:6px; } nav button { background:transparent; border:1px solid transparent; color:var(--mut); padding:7px 14px; border-radius:10px; cursor:pointer; font-size:13px; transition:.2s; }
+  nav button:hover { color:var(--txt); } nav button.active { color:#fff; background:rgba(139,92,246,.15); border-color:rgba(139,92,246,.4); }
+  main { max-width:960px; margin:0 auto; padding:40px 20px 80px; }
+  .hero { display:grid; grid-template-columns:1.3fr .7fr; gap:30px; align-items:center; }
+  .avatar { width:150px; height:150px; border-radius:26px; background:linear-gradient(135deg,var(--accent),#ec4899); display:grid; place-items:center; font-size:56px; font-weight:800; color:#fff; box-shadow:0 20px 50px rgba(139,92,246,.35); margin-left:auto; }
+  h1 { font-size:38px; line-height:1.1; } .role { color:var(--accent); font-weight:700; margin:8px 0 14px; }
+  p.lead { color:var(--mut); line-height:1.6; max-width:52ch; }
+  .skills { display:flex; flex-wrap:wrap; gap:8px; margin:20px 0 26px; }
+  .chip { font-size:12px; padding:6px 12px; border-radius:999px; background:var(--card); border:1px solid var(--line); color:var(--mut); cursor:default; transition:.2s; }
+  .chip:hover { color:#fff; border-color:var(--accent); transform:translateY(-2px); }
+  .btn { border:0; cursor:pointer; font-weight:700; font-size:14px; padding:12px 20px; border-radius:12px; background:var(--accent); color:#fff; transition:.2s; box-shadow:0 10px 24px rgba(139,92,246,.3); }
+  .btn:hover { transform:translateY(-2px); filter:brightness(1.1); } .btn.ghost { background:transparent; border:1px solid var(--line); color:var(--txt); box-shadow:none; }
+  .actions { display:flex; gap:12px; }
+  h2 { margin:44px 0 16px; font-size:22px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; transition:.25s; }
+  .card:hover { transform:translateY(-4px); border-color:var(--accent); box-shadow:0 16px 36px rgba(0,0,0,.4); }
+  .thumb { height:120px; display:grid; place-items:center; font-size:34px; }
+  .card .body { padding:14px; } .card h3 { font-size:15px; margin-bottom:6px; } .card p { font-size:12px; color:var(--mut); line-height:1.5; }
+  .hidden { display:none; }
+  form { display:grid; gap:12px; max-width:460px; } input,textarea { background:var(--card); border:1px solid var(--line); color:var(--txt); padding:12px; border-radius:12px; font:inherit; } input:focus,textarea:focus { outline:none; border-color:var(--accent); }
+  #toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--accent); color:#fff; padding:11px 18px; border-radius:12px; font-size:13px; font-weight:600; opacity:0; pointer-events:none; transition:.3s; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  @media(max-width:720px){ .hero{grid-template-columns:1fr;} .avatar{margin:0 auto;} h1{font-size:30px;} }
+</style>
+</head>
+<body>
+<header><div class="bar"><div class="logo">AVA<b>·DEV</b></div>
+  <nav id="nav">
+    <button data-v="home" class="active">Home</button>
+    <button data-v="work">Work</button>
+    <button data-v="contact">Contact</button>
+  </nav></div></header>
+<main>
+  <section id="home">
+    <div class="hero">
+      <div>
+        <h1>Hi, I'm Ava 👋<br/>I build delightful web experiences.</h1>
+        <div class="role">Front-End Engineer &amp; Design Technologist</div>
+        <p class="lead">I craft fast, accessible interfaces with React, TypeScript and a love for micro-interactions. Currently freelancing with startups.</p>
+        <div class="skills">
+          <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Tailwind</span>
+          <span class="chip">Framer Motion</span><span class="chip">WebGL</span><span class="chip">a11y</span>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="go('work')">View Work</button>
+          <button class="btn ghost" onclick="go('contact')">Contact Me</button>
+        </div>
+      </div>
+      <div class="avatar">AV</div>
+    </div>
+  </section>
+
+  <section id="work" class="hidden">
+    <h2>Selected Work</h2>
+    <div class="grid">
+      <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)">🛍️</div><div class="body"><h3>Shopwave</h3><p>Headless commerce storefront with 99 Lighthouse.</p></div></div>
+      <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">📊</div><div class="body"><h3>Pulse Analytics</h3><p>Realtime dashboard rendering 1M events/day.</p></div></div>
+      <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#10b981,#06b6d4)">🎧</div><div class="body"><h3>Echo Player</h3><p>Offline-first music PWA with waveform UI.</p></div></div>
+      <div class="card"><div class="thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🗺️</div><div class="body"><h3>Wander</h3><p>Vector map explorer built with MapLibre.</p></div></div>
+    </div>
+  </section>
+
+  <section id="contact" class="hidden">
+    <h2>Get in touch</h2>
+    <form onsubmit="send(event)">
+      <input required placeholder="Your name" />
+      <input required type="email" placeholder="you@email.com" />
+      <textarea rows="4" required placeholder="Tell me about your project…"></textarea>
+      <button class="btn" type="submit">Send message</button>
+    </form>
+  </section>
+</main>
+<div id="toast"></div>
+<script>
+  const views=['home','work','contact'];
+  function go(v){ views.forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==v));
+    document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v)); }
+  document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+  function send(e){e.preventDefault();e.target.reset();toast('✅ Message sent (demo — nothing was transmitted)');}
+</script>
+</body>
+</html>

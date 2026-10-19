@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo · Agency</title>
+<style>
+  :root { --accent:#ec4899; --bg:#0a0710; --card:#150e1c; --line:#2a1c33; --txt:#fbeaf3; --mut:#c39fb4; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Georgia','Times New Roman',serif; background:var(--bg); color:var(--txt); }
+  header { position:sticky; top:0; z-index:5; background:rgba(10,7,16,.7); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .bar { max-width:1040px; margin:0 auto; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-style:italic; font-size:20px; } .logo b { color:var(--accent); }
+  nav button { background:none; border:0; color:var(--mut); font:inherit; font-size:14px; margin-left:20px; cursor:pointer; transition:.2s; }
+  nav button:hover { color:var(--txt); }
+  .btn { background:var(--accent); color:#fff; border:0; padding:11px 20px; border-radius:999px; font:inherit; font-size:14px; cursor:pointer; transition:.2s; }
+  .btn:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(236,72,153,.35); }
+  main { max-width:1040px; margin:0 auto; padding:0 20px 70px; }
+  .hero { text-align:center; padding:80px 10px 30px; }
+  .hero .k { font-family:'Segoe UI',sans-serif; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  h1 { font-size:56px; line-height:1.02; font-style:italic; margin:14px 0; } h1 em { color:var(--accent); }
+  .hero p { color:var(--mut); max-width:56ch; margin:0 auto 26px; line-height:1.7; font-size:17px; }
+  .marq { overflow:hidden; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:16px 0; margin:30px 0; white-space:nowrap; }
+  .marq span { display:inline-block; padding:0 30px; font-style:italic; font-size:22px; color:var(--mut); animation:scroll 18s linear infinite; }
+  @keyframes scroll { to { transform:translateX(-50%); } }
+  h2 { font-size:30px; font-style:italic; margin:50px 0 20px; text-align:center; }
+  .svc { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:26px; transition:.25s; }
+  .card:hover { transform:translateY(-6px); border-color:var(--accent); }
+  .card .n { font-family:'Segoe UI',sans-serif; font-size:13px; color:var(--accent); }
+  .card h3 { font-size:22px; font-style:italic; margin:10px 0; } .card p { font-family:'Segoe UI',sans-serif; color:var(--mut); font-size:13.5px; line-height:1.6; }
+  .work { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .tile { border-radius:18px; overflow:hidden; position:relative; height:220px; display:grid; place-items:center; cursor:pointer; transition:.25s; }
+  .tile:hover { transform:scale(1.02); } .tile .lab { position:absolute; bottom:16px; left:18px; font-style:italic; font-size:22px; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+  .tile .go { position:absolute; top:16px; right:18px; background:rgba(0,0,0,.4); backdrop-filter:blur(6px); border-radius:999px; width:38px; height:38px; display:grid; place-items:center; opacity:0; transition:.25s; }
+  .tile:hover .go { opacity:1; }
+  .cta { text-align:center; padding:60px 20px; }
+  @media(max-width:800px){ .svc,.work{grid-template-columns:1fr;} h1{font-size:38px;} nav{display:none;} }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="logo">Atelier<b>·Noir</b></div>
+  <nav><button onclick="scrollTo(0,0)">Studio</button><button onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">Work</button><button onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Contact</button></nav>
+  <button class="btn" onclick="toast('Brief submitted (demo)')">Start a project</button>
+</div></header>
+<main>
+  <div class="hero">
+    <div class="k">Design &amp; Brand Studio</div>
+    <h1>We craft brands that<br/><em>refuse to be ignored.</em></h1>
+    <p>Atelier Noir is an independent studio building bold identities, immersive websites and motion systems for ambitious teams.</p>
+    <button class="btn" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">View selected work</button>
+  </div>
+
+  <div class="marq"><span>Branding ✳ Web Design ✳ Motion ✳ Art Direction ✳ Packaging ✳ Editorial ✳ Branding ✳ Web Design ✳ Motion ✳ Art Direction ✳ Packaging ✳ Editorial ✳</span></div>
+
+  <h2>What we do</h2>
+  <div class="svc">
+    <div class="card"><div class="n">01</div><h3>Brand Identity</h3><p>Logos, type systems, and visual languages that carry across every touchpoint.</p></div>
+    <div class="card"><div class="n">02</div><h3>Web Experiences</h3><p>Award-caliber sites with WebGL, scroll choreography and buttery motion.</p></div>
+    <div class="card"><div class="n">03</div><h3>Art Direction</h3><p>Campaign concepts, photography direction and editorial layouts.</p></div>
+  </div>
+
+  <h2 id="work">Selected work</h2>
+  <div class="work">
+    <div class="tile" style="background:linear-gradient(135deg,#ec4899,#7c3aed)" onclick="toast('Case study (demo)')"><span class="go">↗</span><span class="lab">Lumen Cosmetics</span></div>
+    <div class="tile" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)" onclick="toast('Case study (demo)')"><span class="go">↗</span><span class="lab">Drift Coffee</span></div>
+    <div class="tile" style="background:linear-gradient(135deg,#f59e0b,#ef4444)" onclick="toast('Case study (demo)')"><span class="go">↗</span><span class="lab">Nomad Apparel</span></div>
+    <div class="tile" style="background:linear-gradient(135deg,#10b981,#8b5cf6)" onclick="toast('Case study (demo)')"><span class="go">↗</span><span class="lab">Verde Interiors</span></div>
+  </div>
+
+  <div class="cta" id="cta">
+    <h2 style="margin-bottom:10px">Have a bold idea?</h2>
+    <p style="color:var(--mut);margin-bottom:22px;font-family:'Segoe UI',sans-serif">We take on a handful of partners each quarter.</p>
+    <button class="btn" onclick="toast('Say hello — (demo)')">hello@ateliernoir.studio</button>
+  </div>
+</main>
+<script>
+  function toast(m){ let t=document.getElementById('t');
+    if(!t){ t=document.createElement('div'); t.id='t'; t.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#ec4899;color:#fff;padding:11px 18px;border-radius:12px;font:600 13px/1 sans-serif;opacity:0;pointer-events:none;transition:.3s;z-index:50'; document.body.appendChild(t); }
+    t.textContent=m; t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+    clearTimeout(t._h); t._h=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},1800); }
+</script>
+</body>
+</html>

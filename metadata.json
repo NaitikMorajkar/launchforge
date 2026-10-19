@@ -1,0 +1,6 @@
+{
+  "name": "LaunchForge",
+  "description": "A premier platform for launching, discovering, and showcasing innovative projects and next-generation products.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

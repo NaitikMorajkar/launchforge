@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Demo · SaaS Landing</title>
+<style>
+  :root { --accent:#06b6d4; --bg:#05070f; --card:#0b1120; --line:#16233b; --txt:#e6f1ff; --mut:#8fa3c0; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--txt); }
+  header { position:sticky; top:0; z-index:5; background:rgba(5,7,15,.75); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .bar { max-width:1040px; margin:0 auto; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-weight:800; font-size:18px; } .logo b { color:var(--accent); }
+  nav a { color:var(--mut); text-decoration:none; font-size:13px; margin-left:18px; } nav a:hover { color:var(--txt); }
+  .cta { background:var(--accent); color:#04121a; border:0; padding:10px 16px; border-radius:11px; font-weight:800; cursor:pointer; font-size:13px; }
+  main { max-width:1040px; margin:0 auto; padding:0 20px 80px; }
+  .hero { text-align:center; padding:70px 10px 40px; position:relative; }
+  .badge { display:inline-block; font-size:12px; color:var(--accent); border:1px solid var(--line); background:var(--card); padding:6px 14px; border-radius:999px; margin-bottom:20px; }
+  h1 { font-size:46px; line-height:1.08; letter-spacing:-1px; } h1 span { background:linear-gradient(90deg,var(--accent),#818cf8); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sub { color:var(--mut); max-width:60ch; margin:18px auto 26px; line-height:1.6; }
+  .row { display:flex; gap:12px; justify-content:center; }
+  .btn { padding:13px 24px; border-radius:13px; font-weight:800; cursor:pointer; font-size:14px; border:0; }
+  .btn.p { background:var(--accent); color:#04121a; box-shadow:0 12px 30px rgba(6,182,212,.3); } .btn.s { background:var(--card); color:var(--txt); border:1px solid var(--line); }
+  .toggle { display:flex; align-items:center; justify-content:center; gap:12px; margin:40px 0 24px; font-size:13px; color:var(--mut); }
+  .switch { width:52px; height:28px; border-radius:999px; background:var(--line); position:relative; cursor:pointer; border:0; transition:.25s; }
+  .switch.on { background:var(--accent); } .switch i { position:absolute; top:3px; left:3px; width:22px; height:22px; border-radius:50%; background:#fff; transition:.25s; } .switch.on i { left:27px; }
+  .save { color:#10b981; font-weight:700; }
+  .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .plan { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:26px; transition:.25s; }
+  .plan:hover { transform:translateY(-4px); border-color:var(--accent); }
+  .plan.hot { border-color:var(--accent); box-shadow:0 20px 50px rgba(6,182,212,.18); position:relative; }
+  .plan.hot::before { content:'Most popular'; position:absolute; top:-12px; left:24px; background:var(--accent); color:#04121a; font-size:11px; font-weight:800; padding:4px 12px; border-radius:999px; }
+  .price { font-size:38px; font-weight:800; margin:12px 0; } .price small { font-size:14px; color:var(--mut); font-weight:500; }
+  .plan ul { list-style:none; display:grid; gap:11px; margin:18px 0 22px; font-size:13px; color:var(--mut); }
+  .plan li::before { content:'✓ '; color:var(--accent); font-weight:800; }
+  .plan button { width:100%; padding:12px; border-radius:12px; border:1px solid var(--line); background:transparent; color:var(--txt); font-weight:700; cursor:pointer; }
+  .plan.hot button { background:var(--accent); color:#04121a; border-color:var(--accent); }
+  .feats { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:60px; }
+  .feat { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; } .feat .ic { font-size:26px; }
+  .feat h3 { font-size:15px; margin:12px 0 6px; } .feat p { font-size:13px; color:var(--mut); line-height:1.5; }
+  h2.sec { text-align:center; font-size:28px; margin:64px 0 8px; } .sec-sub { text-align:center; color:var(--mut); margin-bottom:28px; }
+  #toast { position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--accent); color:#04121a; padding:11px 18px; border-radius:12px; font-size:13px; font-weight:800; opacity:0; pointer-events:none; transition:.3s; z-index:50; }
+  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  @media(max-width:820px){ .plans{grid-template-columns:1fr;} h1{font-size:34px;} nav{display:none;} }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="logo">Nimbus<b>Cloud</b></div>
+  <nav><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#" onclick="toast('Docs are out of scope for this demo')">Docs</a></nav>
+  <button class="cta" onclick="toast('Start-trial flow is a demo 🙂')">Start free</button>
+</div></header>
+<main>
+  <div class="hero">
+    <div class="badge">🚀 Now with edge functions</div>
+    <h1>Ship your backend<br/><span>in minutes, not months</span></h1>
+    <p class="sub">Nimbus is the serverless platform with Postgres, auth, storage and realtime — batteries included, zero config, scales to millions.</p>
+    <div class="row"><button class="btn p" onclick="toast('Deploy started (demo)')">Deploy now</button><button class="btn s" onclick="scrollTo(0,document.getElementById('pricing').offsetTop-60)">See pricing</button></div>
+  </div>
+
+  <div class="toggle">
+    <span>Monthly</span>
+    <button class="switch" id="switch" onclick="toggleBilling()"><i></i></button>
+    <span>Yearly</span><span class="save">save 20%</span>
+  </div>
+
+  <section id="pricing"><div class="plans" id="plans"></div></section>
+
+  <h2 class="sec" id="features">Everything you need</h2>
+  <p class="sec-sub">One platform, every backend primitive.</p>
+  <div class="feats">
+    <div class="feat"><div class="ic">🗄️</div><h3>Postgres Database</h3><p>Full SQL with row-level security and auto-generated APIs.</p></div>
+    <div class="feat"><div class="ic">🔐</div><h3>Auth</h3><p>Email, OAuth and magic links with secure sessions.</p></div>
+    <div class="feat"><div class="ic">⚡</div><h3>Edge Functions</h3><p>Run TypeScript close to your users, globally.</p></div>
+    <div class="feat"><div class="ic">📦</div><h3>Storage</h3><p>Bucket-based file storage with image transforms.</p></div>
+    <div class="feat"><div class="ic"> realtime</div><h3>Realtime</h3><p>Subscribe to database changes over websockets.</p></div>
+    <div class="feat"><div class="ic">📈</div><h3>Analytics</h3><p>Query performance and usage dashboards built in.</p></div>
+  </div>
+</main>
+<div id="toast"></div>
+<script>
+  const PLANS=[
+    {n:'Hobby',m:0,y:0,f:['1 project','500MB database','Community support'],hot:false},
+    {n:'Pro',m:29,y:23,f:['Unlimited projects','8GB database','Edge functions','Email support'],hot:true},
+    {n:'Team',m:99,y:79,f:['Everything in Pro','SSO / SAML','Audit logs','Priority support'],hot:false}
+  ];
+  let yearly=false;
+  function render(){
+    document.getElementById('plans').innerHTML=PLANS.map(p=>{
+      const price=yearly?p.y:p.m;
+      return `<div class="plan ${p.hot?'hot':''}"><div style="font-weight:800">${p.n}</div>
+        <div class="price">$${price}<small>/mo</small></div>
+        <ul>${p.f.map(f=>`<li>${f}</li>`).join('')}</ul>
+        <button onclick="toast('${p.n} plan selected (demo)')">Choose ${p.n}</button></div>`;
+    }).join('');
+  }
+  function toggleBilling(){ yearly=!yearly; document.getElementById('switch').classList.toggle('on',yearly); render(); }
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+  render();
+</script>
+</body>
+</html>
