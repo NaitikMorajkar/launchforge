@@ -53,8 +53,19 @@ function readEnvFile(file) {
   const key = env.VITE_SUPABASE_ANON_KEY;
   let ok = true;
 
+  // Detect the untouched template text first — it is the single most common
+  // reason checks fail right after copying .env.example.
+  const isPlaceholderUrl = /YOUR-PROJECT-REF/i.test(url || '');
+  const isPlaceholderKey = /YOUR-PUBLIC-ANON-KEY/i.test(key || '');
+
   if (!url) {
     console.error('✗ VITE_SUPABASE_URL is missing.');
+    ok = false;
+  } else if (isPlaceholderUrl) {
+    console.error('✗ VITE_SUPABASE_URL still contains the .env.example placeholder.');
+    console.error('  Replace it with your real Project URL from');
+    console.error('  Dashboard → Settings → API → Project URL, e.g.');
+    console.error('  VITE_SUPABASE_URL="https://abcdefgh.supabase.co"');
     ok = false;
   } else if (!/^https:\/\/[a-z0-9-]+\.supabase\.(co|in)\/?$/i.test(url)) {
     console.error(`✗ VITE_SUPABASE_URL looks wrong: ${mask(url)}`);
@@ -67,6 +78,11 @@ function readEnvFile(file) {
   if (!key) {
     console.error('✗ VITE_SUPABASE_ANON_KEY is missing.');
     ok = false;
+  } else if (isPlaceholderKey) {
+    console.error('✗ VITE_SUPABASE_ANON_KEY still contains the .env.example placeholder.');
+    console.error('  Replace it with the "anon public" key from');
+    console.error('  Dashboard → Settings → API (the long value starting with eyJ…).');
+    ok = false;
   } else if (key.length < 40 || !key.startsWith('eyJ')) {
     console.error(`✗ VITE_SUPABASE_ANON_KEY looks wrong: ${mask(key)}`);
     console.error('  Expected the "anon public" JWT from Settings → API (starts with eyJ).');
@@ -76,7 +92,8 @@ function readEnvFile(file) {
   }
 
   if (!ok) {
-    console.error('\n  Fix the values above, restart `npm run dev`, then re-run.');
+    console.error('\n  Edit: ' + source + '  →  fill in both values → save, then re-run.');
+    console.error('  (Dashboard → Settings (gear) → API has both values.)');
     process.exit(1);
   }
 
