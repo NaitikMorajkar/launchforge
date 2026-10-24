@@ -187,3 +187,4 @@ and no Supabase required.
   and a new-tab fallback.
 - Gallery metadata lives in `src/data/demoGallery.ts`; add a new demo by dropping an HTML
   file into `public/demos/` and appending an entry there.
+Deployed Website-https://lauchforge.netlify.app/
